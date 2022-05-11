@@ -35,6 +35,6 @@ https://www.youtube.com/channel/UCt0bOkmYbT1NZHolG95RI3g
 
 https://twitter.com/ZizzyCrypto
 
-https://instagram.com/zizzycrypto/
+https://instagram.com/zizzycrypto
 
   
