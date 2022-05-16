@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-Name: move-and-rename-layers.rb
+Name: move-and-rename-layers.js
 Purpose: 
 
 This script is for NFT creators who need to move numerous layers from a
@@ -40,11 +40,13 @@ In this example:
 * Files that include a directory delimiter (such as =) are moved into a directory matching the
   the word preceding the delimiter. Example "Arms=Long#1.png" will be placed in the 
   Arms sub-directory.
+
 */
 
 const fs = require("fs");
 const path = require("path");
 
+// Change this to the layers folder in your HashLips Art Engine install
 const layers_dir = "./HAE/layers-messy/";
 
 const color_tag = "@COLOR";
@@ -75,9 +77,10 @@ files.forEach(file => {
             name = arr[1];
         }
 
-        fs.renameSync(layers_dir + file, layers_dir + dir + name);
-
         console.log(`New: ${dir}${name}`);
+
+        //Rename the file. If Dir is not empty, the file will be moved.
+        fs.renameSync(layers_dir + file, layers_dir + dir + name);
 
     }
     
