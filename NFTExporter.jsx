@@ -103,32 +103,36 @@ var exporter = {
     
     show_dialog: function() {
 	
-        this.dlg = new Window('dialog', 'Export Layers'); 
+        this.dlg = new Window('dialog', 'NFT Artwork Export Tool');
         
-        var msgPnl = this.dlg.add('panel', undefined, 'Export options'); 
+        var info = this.dlg.add('statictext', undefined, 'Exports all layers in the active artboard unless its name starts with "-"'); 
+        //info.size = [400, 20];
+        
+        var panel = this.dlg.add('panel', undefined, ''); 
+        panel.add('statictext', undefined, 'Transform options:');
 
-        var prefixGrp = msgPnl.add('group', undefined, '')
+        var prefixGrp = panel.add('group', undefined, '')
         prefixGrp.orientation = 'row';
         prefixGrp.alignment = [ScriptUI.Alignment.LEFT, ScriptUI.Alignment.TOP]
 
         var prefixSt = prefixGrp.add('statictext', undefined, 'Add prefix:'); 
-        prefixSt.size = [100,20]
+        prefixSt.size = [100, 20];
 
         var prefixEt = prefixGrp.add('edittext', undefined, this.prefix); 
-        prefixEt.size = [ 350,20 ];
+        prefixEt.size = [350, 20];
 
-        var suffixGrp = msgPnl.add('group', undefined, '')
+        var suffixGrp = panel.add('group', undefined, '')
         suffixGrp.orientation = 'row';
         suffixGrp.alignment = [ScriptUI.Alignment.LEFT, ScriptUI.Alignment.TOP]
 
         var suffixSt = suffixGrp.add('statictext', undefined, 'Add suffix:'); 
-        suffixSt.size = [100,20]
+        suffixSt.size = [100, 20];
 
         var suffixEt = suffixGrp.add('edittext', undefined, this.suffix); 
-        suffixEt.size = [ 350,20 ];
+        suffixEt.size = [350, 20];
 
 
-        var repGrp1 = msgPnl.add('group', undefined, '')
+        var repGrp1 = panel.add('group', undefined, '')
         repGrp1.orientation = 'row';
         repGrp1.alignment = [ScriptUI.Alignment.LEFT, ScriptUI.Alignment.TOP]
 
@@ -136,16 +140,16 @@ var exporter = {
         repSt1A.size = [100,20]
 
         var repEt1A = repGrp1.add('edittext', undefined, this.rep1A); 
-        repEt1A.size = [ 150,20 ];
+        repEt1A.size = [150, 20];
 
         var repSt1B = repGrp1.add('statictext', undefined, ' with:'); 
-        repSt1B.size = [30,20];
+        repSt1B.size = [30, 20];
 
         var repEt1B = repGrp1.add('edittext', undefined, this.rep1B); 
-        repEt1B.size = [ 150,20 ];
+        repEt1B.size = [150, 20];
 
 
-        var repGrp2 = msgPnl.add('group', undefined, '')
+        var repGrp2 = panel.add('group', undefined, '')
         repGrp2.orientation = 'row';
         repGrp2.alignment = [ScriptUI.Alignment.LEFT, ScriptUI.Alignment.TOP]
 
@@ -153,45 +157,47 @@ var exporter = {
         repSt2A.size = [100,20]
 
         var repEt2A = repGrp2.add('edittext', undefined, this.rep2A); 
-        repEt2A.size = [ 150,20 ];
+        repEt2A.size = [150, 20];
 
         var repSt2B = repGrp2.add('statictext', undefined, ' with: '); 
         repSt2B.size = [30,20];
 
         var repEt2B = repGrp2.add('edittext', undefined, this.rep2B); 
-        repEt2B.size = [ 150,20 ];
+        repEt2B.size = [150, 20];
 
 
-        var dpiGrp = msgPnl.add('group', undefined, '')
+        panel.add('statictext', undefined, 'Export options:');
+
+        var dpiGrp = panel.add('group', undefined, '')
         dpiGrp.orientation = 'row';
         dpiGrp.alignment = [ScriptUI.Alignment.LEFT, ScriptUI.Alignment.TOP]
 
         var dpiSt = dpiGrp.add('statictext', undefined, 'Scaling:'); 
-        dpiSt.size = [100,20]
+        dpiSt.size = [100, 20]
 
         var dpiEt = dpiGrp.add('edittext', undefined, "100%"); 
-        dpiEt.size = [ 100,20 ];
+        dpiEt.size = [100, 20];
 
         // DIR GROUP
-        var dirGrp = msgPnl.add( 'group', undefined, '') 
+        var dirGrp = panel.add( 'group', undefined, '') 
         dirGrp.orientation = 'row'
         dirGrp.alignment = [ScriptUI.Alignment.LEFT, ScriptUI.Alignment.TOP]
         
         var dirSt = dirGrp.add('statictext', undefined, 'Output directory:'); 
-        dirSt.size = [ 100,20 ];
+        dirSt.size = [100, 20];
 
         var dirEt = dirGrp.add('edittext', undefined, this.base_path); 
-        dirEt.size = [ 300,20 ];
+        dirEt.size = [300, 20];
 
         var chooseBtn = dirGrp.add('button', undefined, 'Choose ...' );
         chooseBtn.onClick = function() { dirEt.text = Folder.selectDialog(); }
 
-        var transPnl = msgPnl.add('group', undefined, ''); 
+        var transPnl = panel.add('group', undefined, ''); 
         transPnl.orientation = 'row'
         transPnl.alignment = [ScriptUI.Alignment.LEFT, ScriptUI.Alignment.TOP]
         
         var formatSt = transPnl.add('statictext', undefined, 'Export format:'); 
-        formatSt.size = [ 100,20 ];    
+        formatSt.size = [100, 20];    
         
         var formatList = transPnl.add('dropdownlist', undefined, [ 'PNG 8', 'PNG 24', 'JPG' ]);
         formatList.selection = 1;
@@ -199,11 +205,11 @@ var exporter = {
         transPnl.transparentChk = transPnl.add('checkbox', undefined, 'Transparency');
         transPnl.transparentChk.value = this.transparency;
 
-        var progBar = msgPnl.add( 'progressbar', undefined, 0, 100 );
-        progBar.size = [400,10]
+        var progBar = panel.add( 'progressbar', undefined, 0, 100 );
+        progBar.size = [400, 10]
 
-        var progLabel = msgPnl.add('statictext', undefined, '...' ); 
-        progLabel.size = [ 400,20 ];
+        var progLabel = panel.add('statictext', undefined, '...' ); 
+        progLabel.size = [400, 20];
 
         var btnPnl = this.dlg.add('group', undefined, ''); 
         btnPnl.orientation = 'row'
