@@ -44,7 +44,9 @@ var docRef = app.activeDocument;
 
 var task = {
 
-    text:     "",
+    prefix:     "",
+    suffix:     "",
+    text:       "",
     replace:    "",
     matching:   "",
     excluding:  "",
@@ -58,7 +60,30 @@ var task = {
     
     show_dialog: function() {
 	
-        this.dlg = new Window('dialog', 'Rename Layers'); 
+        this.dlg = new Window('dialog', 'Rename Layers');
+        
+        var addPanel = this.dlg.add('panel', undefined, 'Add text to layer names:');
+        
+        var prefixGroup = addPanel.add('group', undefined, '');
+        prefixGroup.orientation = 'row';
+        prefixGroup.alignment = [ScriptUI.Alignment.LEFT, ScriptUI.Alignment.TOP];
+
+        var prefixLabel = prefixGroup.add('statictext', undefined, 'Prefix:'); 
+        prefixLabel.size = [150, 20];
+
+        var prefixField = prefixGroup.add('edittext', undefined, this.prefix); 
+        prefixField.size = [200, 20];
+
+        var suffixGroup = addPanel.add('group', undefined, '');
+        suffixGroup.orientation = 'row';
+        suffixGroup.alignment = [ScriptUI.Alignment.LEFT, ScriptUI.Alignment.TOP];
+
+        var suffixLabel = suffixGroup.add('statictext', undefined, 'Suffix:'); 
+        suffixLabel.size = [150, 20];
+
+        var suffixField = suffixGroup.add('edittext', undefined, this.suffix); 
+        suffixField.size = [200, 20];
+
         
         var generalPanel = this.dlg.add('panel', undefined, 'Replace text in layer names:'); 
 
@@ -122,13 +147,15 @@ var task = {
         buttonPanel.okBtn = buttonPanel.add('button', undefined, 'Run', {name:'ok'});
         buttonPanel.okBtn.onClick = function() { 
                 
+                task.prefix     = prefixField.text; 
+                task.suffix     = suffixField.text; 
                 task.text       = textField.text; 
                 task.replace    = replaceField.text; 
                 task.matching   = matchingField.text;
                 task.excluding  = excludingField.text;
                 
-                if( task.text.length == 0 ) {
-                    Window.alert( "'Replace' field cannot be empty. Please type a value and retry..." );    
+                if( task.prefix.length == 0 && task.suffix.length == 0 && task.text.length == 0 ) {
+                    Window.alert( "'Prefix', 'Suffix' and 'Replace' cannot all be empty. Please type a value and retry..." );    
                 }
                 else if( task.matching.length > 0 && task.matching === task.excluding ) {
                     Window.alert( "'Only' and 'Excluding' filters cannot be the same. Please change one of the filters and try again..." );
@@ -153,14 +180,31 @@ var task = {
 
                 var found = docRef.layers[i].name.indexOf(this.matching);
 
-                if( found >= 0 && !excluded)
-                    docRef.layers[i].name = docRef.layers[i].name.replace( this.text, this.replace );
+                if( found >= 0 && !excluded) {
+                    if( task.text.length > 0 )
+                        docRef.layers[i].name = docRef.layers[i].name.replace( this.text, this.replace );
+                        
+                    if( task.prefix.length > 0 )
+                        docRef.layers[i].name = task.prefix + docRef.layers[i].name;
+
+                    if( task.suffix.length > 0 )
+                        docRef.layers[i].name = docRef.layers[i].name + task.suffix;
+                }
 
             }
             else {
                 
-                if( !excluded )
-                    docRef.layers[i].name = docRef.layers[i].name.replace( this.text, this.replace );
+                if( !excluded ) {
+                    if( task.text.length > 0 )
+                        docRef.layers[i].name = docRef.layers[i].name.replace( this.text, this.replace );
+                        
+                    if( task.prefix.length > 0 )
+                        docRef.layers[i].name = task.prefix + docRef.layers[i].name;
+
+                    if( task.suffix.length > 0 )
+                        docRef.layers[i].name = docRef.layers[i].name + task.suffix;
+                }
+
             }
     
         }  
