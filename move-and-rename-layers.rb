@@ -42,6 +42,7 @@
 #
 #
 
+# Change this to the layers folder in your HashLips Art Engine install
 layers_dir = "./HAE/layers-messy/"
 
 color_tag = "@COLOR"
@@ -57,6 +58,7 @@ Dir.each_child(layers_dir) do |file|
 		puts "Orignal: #{file}"		
 
         # Replacements
+        # Add more, if you want...
 		name = file.gsub(color_tag, "@" + color_name)
 		
         # Extract directory from file name
